@@ -569,7 +569,7 @@ as $handledeleteuser$
 $handledeleteuser$;
 
 create trigger delete_user_trigger
-after delete
+after delete 
 on appuser
 for each statement
 execute procedure handle_delete_user()

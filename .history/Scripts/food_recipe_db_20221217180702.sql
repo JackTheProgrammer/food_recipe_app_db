@@ -555,7 +555,7 @@ as $handledeleteuser$
 				delete from recipedetails
 				where appusername = old.appusername then
 				raise notice '% recipe/recipies are deleted', old.appusername;
-
+				
 				return null;
 			else
 				raise notice '% not found in recipedetails', old.appusername;
@@ -569,7 +569,7 @@ as $handledeleteuser$
 $handledeleteuser$;
 
 create trigger delete_user_trigger
-after delete
+after delete 
 on appuser
 for each statement
 execute procedure handle_delete_user()
