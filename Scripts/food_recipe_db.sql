@@ -22,7 +22,7 @@ where ingredientname = 'eggs';
 create table if not exists Recipe(
 	recipeID uuid primary key not null,
 	recipeName varchar(50)
-);
+); 
 
 select *
 from recipe;
@@ -88,7 +88,8 @@ alter table recipedetails
 add column if not exists appUserName varchar(30)
 
 alter table recipedetails
-add constraint fk_user_uniquename foreign key(appusername) references appuser(appUserName)
+add constraint fk_user_uniquename foreign key(appusername) 
+references appuser(appUserName)
 
 select *
 from appuser;
@@ -215,6 +216,7 @@ values (
 
 select *
 from recipedetails;
+
 select *
 from recipe
 inner join recipedetails 
@@ -248,15 +250,15 @@ and recipe.recipeid = recipedetails.recipeid;
 
 select *
 from recipedetailedview;
-select ingredientname,
-	ingredientamount
+
+select ingredientname,ingredientamount
 from ingredient
 inner join (
 	select ingredientid,
 	ingredientamount
 	from recipedetailedview
 	where recipedetailedview.appusername = 'fwdAwn243'
-	and recipedetailedview.recipename = 'omelete'
+	and recipedetailedview.recipename = 'simple omelete'
 ) as ingredientamountdetails 
 on ingredient.ingredientid = ingredientamountdetails.ingredientid;
 
@@ -317,14 +319,16 @@ values (
 create or replace function insert_ingredient(ingredient_name varchar) 
 returns void 
 language plpgsql 
-as $createingredient$ begin
-	insert into ingredient(ingredientid, ingredientname)
-	values (uuid_generate_v4(), ingredient_name);
+as $createingredient$ 
+	begin
+		insert into ingredient(ingredientid, ingredientname)
+		values (uuid_generate_v4(), ingredient_name);
 	end;
 $createingredient$;
 
 select *
 from ingredient;
+
 select insert_ingredient('cloves');
 
 create or replace function get_ingredient_id(ingredient_name varchar) 
