@@ -6,13 +6,14 @@
 			"driver": "postgres-jdbc",
 			"name": "postgres",
 			"save-password": true,
-			"read-only": false,
+			"show-system-objects": true,
 			"configuration": {
 				"host": "localhost",
 				"port": "5432",
 				"database": "postgres",
 				"url": "jdbc:postgresql://localhost:5432/postgres",
-				"home": "PostgreSQL 14.5",
+				"configurationType": "MANUAL",
+				"home": "PostgreSQL 15.1 (Homebrew",
 				"type": "dev",
 				"provider-properties": {
 					"@dbeaver-show-non-default-db@": "false",
@@ -25,8 +26,7 @@
 					"postgresql.dd.plain.string": "false",
 					"postgresql.dd.tag.string": "false"
 				},
-				"auth-model": "native",
-				"handlers": {}
+				"auth-model": "native"
 			}
 		}
 	},

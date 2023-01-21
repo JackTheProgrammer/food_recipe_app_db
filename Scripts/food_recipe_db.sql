@@ -22,7 +22,7 @@ where ingredientname = 'eggs';
 create table if not exists Recipe(
 	recipeID uuid primary key not null,
 	recipeName varchar(50)
-); 
+);
 
 select *
 from recipe;
@@ -259,8 +259,11 @@ inner join (
 	from recipedetailedview
 	where recipedetailedview.appusername = 'fwdAwn243'
 	and recipedetailedview.recipename = 'simple omelete'
+	group by ingredientid, ingredientamount 
 ) as ingredientamountdetails 
 on ingredient.ingredientid = ingredientamountdetails.ingredientid;
+
+select username from appuser where appusername = 'fwdAwn243' group by username;
 
 update ingredient
 set ingredientname = 'eggs'
@@ -329,7 +332,7 @@ $createingredient$;
 select *
 from ingredient;
 
-select insert_ingredient('cloves');
+select insert_ingredient('strawberry');
 
 create or replace function get_ingredient_id(ingredient_name varchar) 
 returns uuid 
@@ -337,7 +340,7 @@ language plpgsql
 as $getingredientid$
 	declare required_ingredient_id uuid;
 	begin 
-		if exists( select from ingredient where ingredientname = ingredient_name ) then
+		if exists( select from ingredient where ingredientname = ingredient_name) = true then
 			select ingredientid into required_ingredient_id
 			from ingredient
 			where ingredientname = ingredient_name;
@@ -355,7 +358,7 @@ $getingredientid$;
 
 select get_ingredient_id('onion');
 select public.get_ingredient_id('green-chilli');
-select get_ingredient_id('fish');
+select get_ingredient_id('strawberry') as ingredient_id;
 
 select ingredientid
 from ingredient
@@ -404,7 +407,7 @@ as $getrecipeid$
 	end;
 $getrecipeid$;
 
-select get_recipe_id('omelete', 'fwdAwn243');
+select get_recipe_id('simple omelete', 'fwdAwn243');
 
 create or replace function loop_func(max_num int) 
 returns integer 
@@ -512,7 +515,7 @@ language plpgsql
 as $fetchrecipeid$
 declare recipe_id uuid;
 	begin 
-		if exists( select from recipe where recipename = user_recipe_name ) then
+		if exists( select from recipe where recipename = user_recipe_name ) = true then
 			select recipeid into recipe_id
 			from recipe
 			where recipename = user_recipe_name;
@@ -528,10 +531,37 @@ declare recipe_id uuid;
 	end;
 $fetchrecipeid$;
 
-select fetch_recipe_id('french fries');
+select fetch_recipe_id('simple omelete');
+
+create or replace function get_user_recipe_id(
+	app_user_name varchar, 
+	recipe_name varchar
+)
+returns uuid
+language plpgsql
+as $getuserrecipeid$
+	declare 
+		user_recipeid uuid;
+	begin
+		select recipeid 
+		into user_recipeid
+		from recipedetails
+		where appusername = app_user_name
+		and recipeid = fetch_recipe_id(recipe_name)
+		group by recipeid;
+	
+		return user_recipeid;
+	end;
+$getuserrecipeid$;
+
+select exists(select from appuser where appusername = 'fwdAwn243' and userpassword = '6equj5*243') as ifExists;
+
+select get_user_recipe_id('fwdAwn243', 'simple omelete');
 
 select *
 from recipe;
+
+select username from appuser where appusername = 'fwdAwn43' and userpassword = '6equj5*243';
 
 update recipedetails
 set ingredientid = get_ingredient_id('coriander')
@@ -547,13 +577,13 @@ select * from recipe;
 
 alter table recipe drop column if exists timeofupload;
 
-create or replace function handle_delete_user() 
+/*create or replace function handle_delete_user() 
 returns trigger 
 language plpgsql 
 as $handledeleteuser$ 
 	begin 
 		if exists (select from appuser where appusername = old.appusername) then 
-			if exists (select from recipedetails where appusername = old.appusername )
+			if exists (select from recipedetails where appusername = old.appusername)
 				delete from recipedetails
 				where appusername = old.appusername then 
 				raise notice '% recipe/recipies are deleted', old.appusername;
@@ -576,5 +606,10 @@ on appuser
 for each statement 
 execute procedure handle_delete_user()
 
+drop function handle_delete_user() cascade;*/
+
 delete from appuser
 where appusername = '';
+
+
+

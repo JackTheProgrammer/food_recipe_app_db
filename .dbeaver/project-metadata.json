@@ -1,1 +1,1 @@
-{"resources":{"Scripts/food_recipe_db.sql":{"default-datasource":"postgres-jdbc-1845c614fc4-3f2d45145fdb0cb2","default-catalog":"postgres","default-schema":"public"}}}
+{"resources":{"Scripts/Script.sql":{"default-schema":"public","default-datasource":"postgres-jdbc-1845c614fc4-3f2d45145fdb0cb2","default-catalog":"postgres"},"Scripts/food_recipe_db.sql":{"default-schema":"public","default-datasource":"postgres-jdbc-1845c614fc4-3f2d45145fdb0cb2","default-catalog":"postgres"}}}
